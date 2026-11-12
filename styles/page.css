@@ -1,0 +1,553 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* =========================================================
+   MEGA MESSY TOURNAMENT
+   PAGE / SHARED LAYOUT
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+main {
+    flex: 1;
+    width: 100%;
+}
+
+
+/* =========================================================
+   PAGE CONTAINER
+========================================================= */
+
+.page-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 30px 70px;
+}
+
+.page-heading {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.page-heading h1 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.page-heading p {
+    color: #666;
+}
+
+.stage-label {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    border-radius: 20px;
+    background: #e9edf3;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.site-header {
+    background: #111;
+    color: white;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 18px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.site-logo {
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.site-logo span {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.main-nav > a,
+.dropdown-button {
+    color: white;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    padding: 10px 13px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: background 0.2s ease;
+}
+
+.main-nav > a:hover,
+.dropdown-button:hover {
+    background: #2a2a2a;
+}
+
+.nav-dropdown {
+    position: relative;
+}
+
+.dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: inherit;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    min-width: 210px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+    padding: 7px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+    z-index: 1000;
+}
+
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    color: #222;
+    text-decoration: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 7px;
+}
+
+.dropdown-menu a:hover {
+    background: #f0f1f3;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.site-footer {
+    background: #111;
+    color: #aaa;
+    text-align: center;
+    padding: 25px 20px;
+    font-size: 13px;
+    margin-top: auto;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button.wide {
+    display: flex;
+    width: 100%;
+    padding: 18px 25px;
+    font-size: 18px;
+    border-radius: 12px;
+}
+
+
+/* =========================================================
+   HOME PAGE
+========================================================= */
+
+.home-hero {
+    text-align: center;
+    padding: 80px 20px 40px;
+}
+
+.home-hero h1 {
+    font-size: 54px;
+    margin-bottom: 14px;
+}
+
+.home-hero p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.home-hero .button + .button {
+    margin-left: 10px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .site-logo {
+        text-align: center;
+    }
+
+    .main-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .header-inner {
+        padding: 18px 15px;
+    }
+
+    .main-nav {
+        gap: 3px;
+    }
+
+    .main-nav > a,
+    .dropdown-button {
+        font-size: 12px;
+        padding: 8px 7px;
+    }
+
+    .page-container {
+        padding: 35px 15px 50px;
+    }
+
+    .page-heading h1 {
+        font-size: 32px;
+    }
+
+    .home-hero h1 {
+        font-size: 36px;
+    }
+
+    .home-hero .button + .button {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* =========================================================
+   HEADER: GIRLS SUB-DROPDOWNS, HELP MENU, SEARCH
+========================================================= */
+
+/* Girls menu holds sub-dropdowns that fly out to the side,
+   so it must not clip them (each sub-menu scrolls instead) */
+
+.dropdown-menu.has-submenus {
+    overflow: visible;
+    max-height: none;
+}
+
+.dropdown-menu.align-right {
+    left: auto;
+    right: 0;
+}
+
+.dropdown-sub {
+    position: relative;
+}
+
+.dropdown-sub-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #222;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.dropdown-sub:hover > .dropdown-sub-button,
+.dropdown-sub:focus-within > .dropdown-sub-button {
+    background: #f0f1f3;
+}
+
+.submenu {
+    position: absolute;
+    top: -7px;
+    left: calc(100% + 4px);
+    min-width: 220px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+    padding: 7px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-5px);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+}
+
+.dropdown-sub:hover > .submenu,
+.dropdown-sub:focus-within > .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.submenu a {
+    display: block;
+    color: #222;
+    text-decoration: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 7px;
+}
+
+.submenu a:hover {
+    background: #f0f1f3;
+}
+
+
+/* ---------- search ---------- */
+
+.header-search {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.header-search input {
+    width: 230px;
+    padding: 10px 14px;
+    background: #2a2a2a;
+    color: white;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition:
+        width 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.header-search input::placeholder {
+    color: #aaa;
+}
+
+.header-search input:focus {
+    width: 290px;
+    background: #333;
+    border-color: #888;
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 360px;
+    max-width: calc(100vw - 30px);
+    max-height: 70vh;
+    overflow-y: auto;
+    background: white;
+    color: #222;
+    border-radius: 10px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    padding: 7px;
+    z-index: 1000;
+}
+
+.search-results[hidden] {
+    display: none;
+}
+
+.search-heading {
+    padding: 8px 12px 4px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #777;
+}
+
+.search-result {
+    display: block;
+    padding: 9px 12px;
+    color: #222;
+    text-decoration: none;
+    border-radius: 7px;
+}
+
+.search-result:hover,
+.search-result.active {
+    background: #f0f1f3;
+}
+
+.search-result-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.search-result-sub {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: #777;
+}
+
+.search-empty {
+    padding: 14px 12px;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 1000px) {
+
+    .header-search {
+        width: 100%;
+    }
+
+    .header-search input,
+    .header-search input:focus {
+        width: 100%;
+    }
+
+    .search-results {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    /* Sub-menus open downwards inside the menu instead of to the side */
+
+    .submenu {
+        position: static;
+        display: none;
+        box-shadow: none;
+        max-height: 40vh;
+        padding: 0 0 0 12px;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
+    .dropdown-sub:hover > .submenu,
+    .dropdown-sub:focus-within > .submenu {
+        display: block;
+    }
+}

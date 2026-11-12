@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+<link rel="icon" type="image/png" href="../assets/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg" />
+<link rel="shortcut icon" href="../assets/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="M.M.Cup" />
+<link rel="manifest" href="../assets/favicon/site.webmanifest" />
+
+<title>All Girls | MEGA Messy Tournament</title>
+	
+
+
+<link rel="stylesheet" href="../styles/page.css">
+<link rel="stylesheet" href="../styles/all.css">
+	
+    <script src="../scripts/maintenance.js"></script>
+
+	
+
+</head>
+
+<body>
+
+<div id="siteHeader"></div>
+
+<main>
+ 
+    <div class="page-container">
+ 
+        <div class="page-heading">
+            <h1>All Girls</h1>
+            <p>Browse every contestant in the MEGA Messy Tournament.</p>
+        </div>
+ 
+        <!-- =====================================================
+             FILTERS
+        ====================================================== -->
+ 
+        <div class="filters">
+ 
+            <div class="filter-top">
+ 
+                <label for="statusFilter" class="filter-label">Status</label>
+ 
+                <select id="statusFilter" class="filter-select">
+                    <option value="all" selected>All Girls</option>
+                    <option value="qualified">Qualified Girls</option>
+                    <option value="remaining">Remaining Girls</option>
+                    <option value="eliminated">Eliminated Girls</option>
+                </select>
+ 
+                <label for="messFilter" class="filter-label">Mess Type</label>
+ 
+                <select id="messFilter" class="filter-select">
+                    <option value="all" selected>All Mess Types</option>
+                    <option value="gunge">Gunge</option>
+                    <option value="slime">Slime</option>
+                    <option value="water">Water</option>
+                    <option value="food">Food</option>
+                    <option value="mud">Mud</option>
+                    <option value="other">Other</option>
+                </select>
+ 
+                <label for="sourceFilter" class="filter-label">Source</label>
+ 
+                <select id="sourceFilter" class="filter-select">
+                    <option value="all" selected>All Sources</option>
+                    <option value="game-show">Game Show</option>
+                    <option value="online-trend">Online Trend</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="tv">TV</option>
+                    <option value="other">Other</option>
+                </select>
+ 
+                <input
+                    type="text"
+                    class="search-box"
+                    id="searchBox"
+                    placeholder="Search girls..."
+                >
+ 
+                <button type="button" class="button" id="resetFilters">
+                    Reset Filters
+                </button>
+ 
+            </div>
+ 
+        </div>
+ 
+ 
+        <!-- =====================================================
+             GIRLS GRID (filled in by JavaScript)
+        ====================================================== -->
+
+        <div class="all-girls-grid" id="girlsGrid">
+
+            <!-- Cards are built by the script below from girls-data.js.
+                 To add a girl, add her to girls-data.js - nothing to edit here. -->
+
+            <div class="no-results" id="noResults" hidden>
+                No girls match your filters.
+            </div>
+ 
+        </div>
+
+        <!-- =====================================================
+             PAGINATION (20 girls per page, built by the script)
+        ====================================================== -->
+
+        <div class="pagination-info" id="paginationInfo"></div>
+        <nav class="pagination" id="pagination" aria-label="Pagination"></nav>
+ 
+    </div>
+ 
+</main>
+<div id="siteFooter"></div>
+
+<script src="../scripts/girls-data.js"></script>
+<script src="../scripts/site.js"></script>
+
+<script>
+
+const GIRLS_PER_PAGE = 20;
+
+const statusFilter = document.getElementById("statusFilter");
+const messFilter = document.getElementById("messFilter");
+const sourceFilter = document.getElementById("sourceFilter");
+const searchBox = document.getElementById("searchBox");
+const resetFilters = document.getElementById("resetFilters");
+const noResults = document.getElementById("noResults");
+const pagination = document.getElementById("pagination");
+const paginationInfo = document.getElementById("paginationInfo");
+const girlsGrid = document.getElementById("girlsGrid");
+
+
+/* =========================================================
+   BUILD THE CARDS FROM girls-data.js
+========================================================= */
+
+const STATUS_LABELS = {
+    remaining: "Competing",
+    qualified: "Qualified",
+    eliminated: "Eliminated"
+};
+
+function createGirlCard(girl) {
+
+    const statusKey = getStatusKey(girl);
+
+    const card = document.createElement("div");
+
+    card.className = "all-girl-card";
+    card.dataset.status = statusKey;
+    card.dataset.name = girl.name;
+    card.dataset.messType = getMessKey(girl);
+    card.dataset.source = getSourceKey(girl);
+
+    card.innerHTML = `
+        <div class="all-girl-image-wrapper">
+            <img class="all-girl-image"
+                 alt="${escapeHTML(girl.name)}"
+                 loading="lazy">
+        </div>
+        <div class="all-girl-info">
+            <div class="all-girl-number">Girl ${escapeHTML(girl.id)}</div>
+            <div class="all-girl-name">${escapeHTML(girl.name)}</div>
+            <div class="all-status-badge ${statusKey}">${escapeHTML(STATUS_LABELS[statusKey])}</div>
+            <br>
+            <a href="${escapeHTML(getGirlProfileURL(girl.id))}" class="all-profile-button">View Profile</a>
+        </div>
+    `;
+
+    setGirlImage(card.querySelector(".all-girl-image"), girl, "a");
+
+    return card;
+
+}
+
+getAllGirls().forEach(girl => {
+    girlsGrid.insertBefore(createGirlCard(girl), noResults);
+});
+
+const cards = Array.from(girlsGrid.querySelectorAll(".all-girl-card"));
+
+let currentPage = 1;
+let filteredCards = cards;
+
+
+function applyFilters() {
+
+    const statusValue = statusFilter.value;
+    const messValue = messFilter.value;
+    const sourceValue = sourceFilter.value;
+    const searchValue = searchBox.value.toLowerCase().trim();
+
+    filteredCards = cards.filter(card =>
+        (statusValue === "all" || card.dataset.status === statusValue) &&
+        (messValue === "all" || card.dataset.messType === messValue) &&
+        (sourceValue === "all" || card.dataset.source === sourceValue) &&
+        (card.dataset.name || "").toLowerCase().includes(searchValue)
+    );
+
+    currentPage = 1;
+    renderPage();
+
+}
+
+
+function renderPage() {
+
+    const total = filteredCards.length;
+    const totalPages = Math.max(1, Math.ceil(total / GIRLS_PER_PAGE));
+
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    const start = (currentPage - 1) * GIRLS_PER_PAGE;
+    const end = start + GIRLS_PER_PAGE;
+    const visibleSet = new Set(filteredCards.slice(start, end));
+
+    cards.forEach(card => {
+        card.hidden = !visibleSet.has(card);
+    });
+
+    noResults.hidden = total > 0;
+
+    if (total > 0) {
+        paginationInfo.textContent =
+            "Showing " + (start + 1) + "–" + Math.min(end, total) +
+            " of " + total + " girls";
+    } else {
+        paginationInfo.textContent = "";
+    }
+
+    renderPagination(totalPages);
+
+}
+
+
+function pageButton(label, page, options) {
+
+    options = options || {};
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-button";
+    button.textContent = label;
+
+    if (options.active) {
+        button.classList.add("active");
+        button.setAttribute("aria-current", "page");
+    }
+
+    if (options.disabled) {
+        button.disabled = true;
+    } else {
+        button.addEventListener("click", () => goToPage(page));
+    }
+
+    return button;
+
+}
+
+
+function renderPagination(totalPages) {
+
+    pagination.innerHTML = "";
+
+    if (totalPages <= 1) {
+        return;
+    }
+
+    pagination.appendChild(pageButton("Prev", currentPage - 1, { disabled: currentPage === 1 }));
+
+    // Show first, last, and a window around the current page
+    const pages = [];
+
+    for (let p = 1; p <= totalPages; p++) {
+        if (p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1) {
+            pages.push(p);
+        }
+    }
+
+    let previous = 0;
+
+    pages.forEach(p => {
+
+        if (p - previous > 1) {
+            const dots = document.createElement("span");
+            dots.className = "page-dots";
+            dots.textContent = "…";
+            pagination.appendChild(dots);
+        }
+
+        pagination.appendChild(pageButton(String(p), p, { active: p === currentPage }));
+        previous = p;
+
+    });
+
+    pagination.appendChild(pageButton("Next", currentPage + 1, { disabled: currentPage === totalPages }));
+
+}
+
+
+function goToPage(page) {
+
+    currentPage = page;
+    renderPage();
+
+    window.scrollTo({
+        top: document.querySelector(".filters").offsetTop - 20,
+        behavior: "smooth"
+    });
+
+}
+
+
+[statusFilter, messFilter, sourceFilter].forEach(select => {
+    select.addEventListener("change", applyFilters);
+});
+
+searchBox.addEventListener("input", applyFilters);
+
+resetFilters.addEventListener("click", () => {
+
+    statusFilter.value = "all";
+    messFilter.value = "all";
+    sourceFilter.value = "all";
+    searchBox.value = "";
+
+    applyFilters();
+
+});
+
+applyFilters();
+
+</script>
+
+</body>
+
+</html>

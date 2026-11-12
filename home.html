@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MEGA Messy Tournament - Season 1</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="M.M.Cup" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+
+    <link rel="stylesheet" href="styles/site.css">
+    <link rel="stylesheet" href="styles/page.css">
+	
+    <script src="scripts/maintenance.js"></script>
+
+
+    <style>
+        /* =========================================================
+           HOME PAGE ONLY
+        ========================================================= */
+
+        .hero {
+            position: relative;
+            text-align: center;
+            padding: 90px 20px 80px;
+            color: white;
+            background: linear-gradient(135deg, #111 0%, #1a1a2e 45%, #0f3460 100%);
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(125, 211, 252, 0.18), transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero .stage-label {
+            background: rgba(255, 255, 255, 0.12);
+            color: #cfe9fb;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 7vw, 4.8rem);
+            font-weight: 900;
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            opacity: 0.75;
+            margin-bottom: 50px;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            padding: 25px 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            font-size: clamp(1.6rem, 5vw, 2.8rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .coming-soon .year {
+            display: block;
+            margin-top: 10px;
+            font-size: clamp(3rem, 9vw, 6rem);
+            line-height: 1;
+            color: #7dd3fc;
+        }
+
+        .hero-actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hero-actions .button {
+            background: #7dd3fc;
+            color: #0b1d33;
+        }
+
+        .hero-actions .button:hover:not(:disabled) {
+            background: #a5e1fd;
+        }
+
+        .hero-actions .button.secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+        }
+
+        .hero-actions .button.secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .home-stats {
+            max-width: 800px;
+            margin-bottom: 55px;
+        }
+
+        .section-heading {
+            margin-bottom: 30px;
+        }
+
+        .group-list.two-tiles {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .explore-tile {
+            padding: 34px 22px;
+        }
+
+        .explore-tile .icon {
+            display: block;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 60px 16px 55px;
+            }
+
+            .coming-soon {
+                padding: 22px 24px;
+            }
+
+            .group-list.two-tiles {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header is built by site.js -->
+    <div id="siteHeader"></div>
+
+    <main>
+
+        <!-- Hero / countdown -->
+        <section class="hero">
+            <div class="hero-inner">
+
+                <span class="stage-label">Season 1</span>
+
+                <h1>MEGA Messy Tournament</h1>
+
+                <p class="hero-subtitle">The ultimate showdown begins soon.</p>
+
+                <div class="coming-soon">
+                    Coming in
+                    <span class="year">2027</span>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="girls/all.html" class="button" id="heroGirlsLink">Meet the Girls</a>
+                    <a href="qualifying/groups/index.html" class="button secondary" id="heroVoteLink">Vote Now</a>
+                </div>
+
+            </div>
+        </section>
+
+
+        <div class="page-container">
+
+            <!-- Live numbers from girls-data.js -->
+            <div class="group-status home-stats">
+
+                <div class="status-box">
+                    <span class="status-number" id="statGirls">–</span>
+                    <span class="status-label">Contestants</span>
+                </div>
+
+                <div class="status-box">
+                    <span class="status-number" id="statGroups">–</span>
+                    <span class="status-label">Qualifying Groups</span>
+                </div>
+
+                <div class="status-box">
+                    <span class="status-number" id="statShows">–</span>
+                    <span class="status-label">Shows &amp; Sources</span>
+                </div>
+
+            </div>
+
+            <div class="section-heading">
+                <h2>Explore the Tournament</h2>
+                <p>Jump straight to the part you're looking for.</p>
+            </div>
+
+            <div class="group-list two-tiles">
+
+                <a href="girls/all.html" class="group-tile explore-tile">
+                    <span class="icon">👩</span>
+                    <strong>All Girls</strong>
+                    <span>Browse and filter every contestant</span>
+                </a>
+
+                <a href="qualifying/groups/index.html" class="group-tile explore-tile">
+                    <span class="icon">🎯</span>
+                    <strong>Qualifying Stage</strong>
+                    <span>Group pages and voting</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer is built by site.js -->
+    <div id="siteFooter"></div>
+
+
+    <!-- Load order: girls-data.js, site.js, then this page's script -->
+    <script src="scripts/girls-data.js"></script>
+    <script src="scripts/site.js"></script>
+
+    <script>
+        /* =========================================================
+           LIVE STATS (from girls-data.js)
+        ========================================================= */
+
+        (function showStats() {
+
+            if (typeof getAllGirls !== "function") {
+                return;
+            }
+
+            const allGirls = getAllGirls();
+
+            const groups = new Set(
+                allGirls.map(girl => girl.group).filter(Boolean)
+            );
+
+            const sources = new Set(
+                allGirls.map(girl => girl.from).filter(Boolean)
+            );
+
+            document.getElementById("statGirls").textContent = allGirls.length;
+            document.getElementById("statGroups").textContent = groups.size;
+            document.getElementById("statShows").textContent = sources.size;
+
+        })();
+    </script>
+
+</body>
+</html>
