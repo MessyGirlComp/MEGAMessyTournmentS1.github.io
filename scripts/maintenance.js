@@ -15,7 +15,7 @@
 /* ---------------------------------------------------------
    MASTER SWITCH  -  true = maintenance ON, false = site OFF
 --------------------------------------------------------- */
-const MAINTENANCE_ENABLED = false;
+const MAINTENANCE_ENABLED = true;
 
 
 /* ---------------------------------------------------------
@@ -25,18 +25,18 @@ const MAINTENANCE_ENABLED = false;
            be true for any redirect to happen)
 --------------------------------------------------------- */
 const MAINTENANCE_PAGES = {
-    "home.html":       false,   // home page
-    "all.html":        false,   // all girls
-    "profile.html":    false,   // girl profile
-    "index.html":      false,   // qualifying/groups list (root index.html is never redirected)
-    "group.html":      false,   // single qualifying group
-    "qualified.html":  false,   // qualified girls
-    "eliminated.html": false,   // eliminated girls
-    "wildcard.html":   false   // wildcard girls
+    "home.html":       true,   // home page
+    "all.html":        true,   // all girls
+    "profile.html":    true,   // girl profile
+    "index.html":      true,   // qualifying/groups list (root index.html is never redirected)
+    "group.html":      true,   // single qualifying group
+    "qualified.html":  true,   // qualified girls
+    "eliminated.html": true,   // eliminated girls
+    "wildcard.html":   true   // wildcard girls
 };
 
 // Any page that is not listed above
-const MAINTENANCE_OTHER_PAGES = false;
+const MAINTENANCE_OTHER_PAGES = true;
 
 
 /* ---------------------------------------------------------
@@ -45,7 +45,7 @@ const MAINTENANCE_OTHER_PAGES = false;
    this is a convenience for testing, not real security.
 --------------------------------------------------------- */
 const MAINTENANCE_ADMIN_USER = "MEGAMESS2027";
-const MAINTENANCE_ADMIN_PASS = "040611";
+const MAINTENANCE_ADMIN_PASS = "1234";
 
 // Remembers where this script lives (used to find the site root)
 const MAINTENANCE_SCRIPT_SRC = document.currentScript ? document.currentScript.src : "";
