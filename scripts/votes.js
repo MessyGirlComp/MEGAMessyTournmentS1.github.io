@@ -42,7 +42,7 @@ const VOTES_PER_GROUP = 2;
 // const VOTING_ENABLED = true;   // Voting ON
 // const VOTING_ENABLED = false;  // Voting OFF
 //
-const VOTING_ENABLED = true;
+const VOTING_ENABLED = false;
 
 
 // =========================================================
@@ -54,7 +54,7 @@ const VOTING_ENABLED = true;
 // false = visitors only see a friendly message
 //         (use when the site is live)
 //
-const VOTING_DEBUG = true;
+const VOTING_DEBUG = false;
 
 
 const VOTER_ID_KEY = "mmt_voter_id";
