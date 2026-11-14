@@ -63,7 +63,7 @@ as $$
 declare
     picks text[];
 begin
-    if p_group is null or p_group < 1 or p_group > 42
+    if p_group is null or p_group < 1 or p_group > 307
        or p_voter is null or p_girls is null then
         return 'invalid';
     end if;
