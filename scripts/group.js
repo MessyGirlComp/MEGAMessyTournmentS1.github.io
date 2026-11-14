@@ -31,7 +31,7 @@ const QUALIFY_COUNT = 2;
 const WILDCARD_COUNT = 1;
 
 /* Maximum number of qualifying groups */
-const MAX_GROUPS = 42;
+const MAX_GROUPS = 307;
 
 
 /* =========================================================
