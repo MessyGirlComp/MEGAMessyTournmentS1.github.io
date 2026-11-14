@@ -1,4 +1,5 @@
 // JavaScript Document
+// JavaScript Document
 /* =========================================================
    MEGA MESSY TOURNAMENT
    VOTING (Supabase)
@@ -42,6 +43,18 @@ const VOTES_PER_GROUP = 2;
 // const VOTING_ENABLED = false;  // Voting OFF
 //
 const VOTING_ENABLED = true;
+
+
+// =========================================================
+// DEBUG MODE
+// =========================================================
+//
+// true  = the page shows the REAL reason a vote failed
+//         (use while testing)
+// false = visitors only see a friendly message
+//         (use when the site is live)
+//
+const VOTING_DEBUG = true;
 
 
 const VOTER_ID_KEY = "mmt_voter_id";
@@ -362,8 +375,9 @@ async function castVotes(group, girlIDs) {
 
             ok: false,
 
-            error:
-                "Your votes could not be saved. Please try again."
+            error: VOTING_DEBUG
+                ? describeVoteError(error)
+                : "Your votes could not be saved. Please try again."
 
         };
 
@@ -418,14 +432,19 @@ async function castVotes(group, girlIDs) {
 
     /* =====================================================
        UNKNOWN DATABASE RESPONSE
+       (includes "invalid", which means the database
+       refused the group number or the girl IDs)
     ===================================================== */
+
+    console.error("Unexpected response from cast_votes:", data);
 
     return {
 
         ok: false,
 
-        error:
-            "Your votes could not be saved. Please try again."
+        error: VOTING_DEBUG
+            ? `The database refused these votes (it answered "${data}"). Check the group number and girl IDs.`
+            : "Your votes could not be saved. Please try again."
 
     };
 
@@ -468,5 +487,34 @@ function getVotingStatusText() {
     }
 
     return "Voting is currently closed.";
+
+}
+
+
+/* =========================================================
+   DEBUG: TURN A SUPABASE ERROR INTO READABLE TEXT
+========================================================= */
+
+function describeVoteError(error) {
+
+    const message = String((error && error.message) || "");
+    const code = String((error && error.code) || "");
+    const status = (error && (error.status || error.statusCode)) || "";
+
+    const parts = [];
+
+    if (/failed to fetch|networkerror|load failed/i.test(message)) {
+        parts.push("Could not reach Supabase. Check SUPABASE_URL in supabase-config.js and that the project is not paused.");
+    } else if (/invalid api key|jwt|apikey/i.test(message) || status === 401 || status === 403) {
+        parts.push("Supabase rejected the API key. Re-copy the publishable key from Project Settings > API Keys.");
+    } else if (code === "PGRST202" || status === 404 || /could not find the function/i.test(message)) {
+        parts.push("Supabase can't find the cast_votes function. Run supabase-setup.sql in THIS project, then run: notify pgrst, 'reload schema';");
+    } else if (code === "42501" || /permission denied/i.test(message)) {
+        parts.push("Permission denied. Re-run the grant lines at the bottom of supabase-setup.sql.");
+    }
+
+    parts.push(`[${[code, status, message].filter(Boolean).join(" | ") || "no details"}]`);
+
+    return parts.join(" ");
 
 }
