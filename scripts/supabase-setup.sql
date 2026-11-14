@@ -1,25 +1,34 @@
 -- =========================================================
--- MEGA MESSY TOURNAMENT: SUPABASE VOTING SETUP (v2)
+-- MEGA MESSY TOURNAMENT: SUPABASE VOTING SETUP (v3)
 -- Paste this whole file into Supabase > SQL Editor > Run.
--- Safe to run more than once, and it upgrades the first
--- version (one vote per group) to this one (two votes).
+-- Safe to run more than once, and it upgrades older versions.
 --
 -- Rules:
 --   * each voter picks exactly 2 DIFFERENT girls per group
 --   * a voter can only vote once per group
 --   * the public can NOT read votes or counts
 --   * results are only visible to you, in the SQL Editor
+--
+-- Groups allowed: 1 to 307 (must match MAX_GROUPS in group.js)
 -- =========================================================
 
 -- 1. The votes table: one row per girl a voter picked ---------------
 
 create table if not exists public.votes (
     id            bigint generated always as identity primary key,
-    group_number  int  not null check (group_number between 1 and 42),
+    group_number  int  not null check (group_number between 1 and 307),
     girl_id       text not null check (girl_id ~ '^[0-9]{3}$'),
     voter_id      uuid not null,
     created_at    timestamptz not null default now()
 );
+
+-- If the table already existed with the old 1-42 limit, replace it.
+alter table public.votes
+    drop constraint if exists votes_group_number_check;
+
+alter table public.votes
+    add constraint votes_group_number_check
+    check (group_number between 1 and 307);
 
 -- Old version allowed one row per voter per group. Remove that rule...
 alter table public.votes
@@ -104,6 +113,24 @@ grant execute on function public.cast_votes(int, uuid, text[]) to anon, authenti
 
 drop function if exists public.get_group_results(int);
 
+-- 5. Tell the Supabase API about the new function --------------------
+-- Without this, the website can get a 404 on /rest/v1/rpc/cast_votes.
+
+notify pgrst, 'reload schema';
+
+-- =========================================================
+-- CHECK IT WORKED (run these separately, after the setup):
+--
+--   select proname, pg_get_function_arguments(oid)
+--   from pg_proc
+--   where proname = 'cast_votes';
+--
+--   -- should return: ok
+--   select public.cast_votes(1, gen_random_uuid(), array['001','002']);
+--
+--   -- then remove the test rows
+--   delete from public.votes where group_number = 1;
+--
 -- =========================================================
 -- VIEWING RESULTS (run these yourself in the SQL Editor)
 --
