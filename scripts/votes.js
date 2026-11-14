@@ -41,7 +41,7 @@ const VOTES_PER_GROUP = 2;
 // const VOTING_ENABLED = true;   // Voting ON
 // const VOTING_ENABLED = false;  // Voting OFF
 //
-const VOTING_ENABLED = false;
+const VOTING_ENABLED = true;
 
 
 const VOTER_ID_KEY = "mmt_voter_id";
