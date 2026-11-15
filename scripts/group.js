@@ -8,6 +8,7 @@
    Load order:
    Supabase library,
    girls-data.js,
+   tournament-data.js,
    site.js,
    supabase-config.js,
    votes.js,
@@ -24,6 +25,10 @@
    QUALIFYING SETTINGS
 ========================================================= */
 
+/* Season 1 format: 307 groups of 6, round robin.
+   1st + 2nd qualify, 3rd goes to the Wildcard Stage, 4th-6th are eliminated.
+   (Numbers come from tournament-data.js.) */
+
 /* How many girls in each group qualify directly */
 const QUALIFY_COUNT = 2;
 
@@ -31,7 +36,7 @@ const QUALIFY_COUNT = 2;
 const WILDCARD_COUNT = 1;
 
 /* Maximum number of qualifying groups */
-const MAX_GROUPS = 307;
+const MAX_GROUPS = typeof TOURNAMENT !== "undefined" ? TOURNAMENT.groups : 307;
 
 
 /* =========================================================
@@ -74,7 +79,7 @@ function buildGroup() {
         `Qualifying Group ${groupNumber}`;
 
     document.getElementById("groupSubtitle").textContent =
-        "Meet the contestants and vote for your favourite.";
+        "Round robin: 1st and 2nd place qualify, 3rd place goes to the Wildcard Stage, 4th to 6th are eliminated. Meet the contestants and vote for your favourites.";
 
     document.getElementById("contestantCount").textContent =
         groupGirls.length;
@@ -93,9 +98,73 @@ function buildGroup() {
         grid.appendChild(createGirlCard(girl));
     });
 
+    showGroupStandings(groupNumber);
+
     setupVoting(groupNumber);
 
     setupGroupNavigation(groupNumber);
+
+}
+
+
+/* =========================================================
+   FINAL STANDINGS
+   (only shown once the group's result is in GROUP_RESULTS,
+   tournament-data.js)
+========================================================= */
+
+const STANDING_LABELS = {
+    qualified: "Qualified",
+    wildcard: "Wildcard Stage",
+    eliminated: "Eliminated"
+};
+
+function showGroupStandings(group) {
+
+    if (typeof getGroupPlacings !== "function") {
+        return;
+    }
+
+    const placings = getGroupPlacings(group);
+
+    if (placings.length === 0) {
+        return;
+    }
+
+    const rows = placings.map(entry => {
+
+        const girl = getGirl(entry.id);
+
+        return `
+            <tr class="tm-standing-${entry.outcome}">
+                <td>${entry.place}</td>
+                <td>
+                    <a href="${escapeHTML(getGirlProfileURL(entry.id))}">
+                        ${escapeHTML(girl ? girl.name : entry.id)}
+                    </a>
+                    <small>Girl ${escapeHTML(entry.id)}</small>
+                </td>
+                <td>${escapeHTML(STANDING_LABELS[entry.outcome])}</td>
+            </tr>
+        `;
+
+    }).join("");
+
+    const box = document.createElement("section");
+
+    box.className = "tm-standings";
+
+    box.innerHTML = `
+        <h2>Final Standings</h2>
+        <table class="tm-table">
+            <thead>
+                <tr><th>Place</th><th>Contestant</th><th>Result</th></tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+
+    document.getElementById("girlsGrid").after(box);
 
 }
 
@@ -141,7 +210,7 @@ function createGirlCard(girl) {
             </div>
 
             <div class="group-status-badge ${statusKey}">
-                ${escapeHTML(girl.status || "Competing")}
+                ${escapeHTML(getGirlStatus(girl) || "Competing")}
             </div>
 
             <br>

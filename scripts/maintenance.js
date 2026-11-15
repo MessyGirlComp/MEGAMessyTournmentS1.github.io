@@ -32,7 +32,9 @@ const MAINTENANCE_PAGES = {
     "group.html":      false,   // single qualifying group
     "qualified.html":  false,   // qualified girls
     "eliminated.html": false,   // eliminated girls
-    "wildcard.html":   false   // wildcard girls
+    "wildcard.html":   false,  // wildcard girls
+    "stage.html":      false   // tournament stage page (tournament/stage.html?stage=...)
+                               // NOTE: tournament/index.html (the overview) uses the "index.html" switch above
 };
 
 // Any page that is not listed above

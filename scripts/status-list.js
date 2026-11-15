@@ -16,17 +16,21 @@
    Set a girl's status in girls-data.js to, for example:
    "Qualified", "Eliminated" or "Wildcard".
 
-   Load order: girls-data.js, site.js, status-list.js
+   Load order: girls-data.js, tournament-data.js, site.js, status-list.js
+
+   A girl's status comes from tournament-data.js when she is in
+   the results there (see getGirlStatus / getStatusKey in girls-data.js).
 ========================================================= */
 
 const STATUS_PAGES = {
 
     wildcard: {
         title: "Wildcard Stage",
-        subtitle: "These girls are in the wildcard stage, fighting for a last place in the tournament.",
+        subtitle: "These girls finished 3rd in their group and are fighting for one of 154 wildcard places in the knockout tournament.",
         badge: "wildcard",
         empty: "No girls are in the wildcard stage yet.",
-        matches: girl => String(girl.status || "").toLowerCase().includes("wildcard")
+        stage: "wildcard",
+        matches: girl => isWildcardGirl(girl)
     },
 
     eliminated: {
@@ -67,6 +71,24 @@ function buildStatusPage() {
 
     document.getElementById("statusTitle").textContent = config.title;
     document.getElementById("statusSubtitle").textContent = config.subtitle;
+
+    /* Link to the 1v1 matches for this stage */
+
+    if (config.stage && typeof stageURL === "function") {
+
+        const subtitle = document.getElementById("statusSubtitle");
+
+        const link = document.createElement("a");
+
+        link.className = "button";
+        link.href = stageURL(config.stage);
+        link.textContent = "View Wildcard Matches";
+        link.style.display = "inline-block";
+        link.style.marginTop = "14px";
+
+        subtitle.after(link);
+
+    }
     document.getElementById("girlCount").textContent = girlsHere.length;
 
     const list = document.getElementById("statusList");
@@ -182,7 +204,7 @@ function createStatusCard(girl, config) {
             </div>
 
             <div class="group-status-badge ${config.badge}">
-                ${escapeHTML(girl.status || config.title)}
+                ${escapeHTML(getGirlStatus(girl) || config.title)}
             </div>
 
             <br>

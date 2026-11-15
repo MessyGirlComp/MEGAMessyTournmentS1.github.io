@@ -11,7 +11,8 @@
 
    and loads, in this order:
 
-   girls-data.js   then   site.js   then   the page's own script
+   girls-data.js   then   tournament-data.js   then   site.js
+   then   the page's own script
 
    Change a link or menu here ONCE and every page updates.
 ========================================================= */
@@ -98,6 +99,26 @@ function buildGirlsMenu() {
 
 
 /* =========================================================
+   TOURNAMENT DROPDOWN
+   (built from the stage list in tournament-data.js)
+========================================================= */
+
+function buildTournamentMenu() {
+
+    const overview = `<a href="${escapeHTML(siteURL("tournament/index.html"))}">Tournament Overview</a>`;
+
+    if (typeof TOURNAMENT_STAGES === "undefined") {
+        return overview;
+    }
+
+    return overview + TOURNAMENT_STAGES.map(stage => `
+        <a href="${escapeHTML(stageURL(stage.key))}">${escapeHTML(stage.title)}</a>
+    `).join("");
+
+}
+
+
+/* =========================================================
    HEADER
 ========================================================= */
 
@@ -134,9 +155,21 @@ function renderSiteHeader() {
 
                         <div class="dropdown-menu">
                             <a href="${escapeHTML(siteURL("qualifying/groups/index.html"))}">Group Stages</a>
-                            <a href="${escapeHTML(siteURL("qualifying/wildcard.html"))}">Wildcard Stage</a>
+                            <a href="${escapeHTML(siteURL("qualifying/wildcard.html"))}">Wildcard Girls</a>
                             <a href="${escapeHTML(siteURL("qualifying/eliminated.html"))}">Eliminated Girls</a>
                             <a href="${escapeHTML(siteURL("qualifying/qualified.html"))}">Qualifying Girls</a>
+                        </div>
+
+                    </div>
+
+                    <div class="nav-dropdown">
+
+                        <button type="button" class="dropdown-button">
+                            Tournament <span>&#8964;</span>
+                        </button>
+
+                        <div class="dropdown-menu">
+                            ${buildTournamentMenu()}
                         </div>
 
                     </div>
@@ -241,16 +274,20 @@ const SEARCH_PAGES = [
     { title: "All Girls", path: "girls/all.html", keywords: "contestants browse everyone list filter" },
 
     { title: "Qualifying Stage: Group Stages", path: "qualifying/groups/index.html", keywords: "qualifying groups" },
-    { title: "Qualifying Stage: Wildcard Stage", path: "qualifying/wildcard.html", keywords: "qualifying wildcard" },
+    { title: "Qualifying Stage: Wildcard Girls", path: "qualifying/wildcard.html", keywords: "qualifying wildcard third place" },
     { title: "Qualifying Stage: Eliminated Girls", path: "qualifying/eliminated.html", keywords: "qualifying out knocked" },
     { title: "Qualifying Stage: Qualifying Girls", path: "qualifying/qualified.html", keywords: "qualifying qualified through winners" },
 
-    { title: "Tournament Stage: Group Stages", path: "tournament/groups/index.html", keywords: "tournament groups" },
-    { title: "Tournament Stage: Round of 32", path: "tournament/round32.html", keywords: "tournament round 32 last" },
-    { title: "Tournament Stage: Quarter Finals", path: "tournament/quarter-finals.html", keywords: "tournament quarter final" },
-    { title: "Tournament Stage: Semi Finals", path: "tournament/semi-finals.html", keywords: "tournament semi final" },
-    { title: "Tournament Stage: Grand Finals", path: "tournament/grand-finals.html", keywords: "tournament grand final winner champion" },
-    { title: "Tournament Stage: 3rd Place Match", path: "tournament/third-place.html", keywords: "tournament third place bronze" },
+    { title: "Tournament Overview", path: "tournament/index.html", keywords: "tournament format season 1 stages rules judging overview" },
+
+    /* every Season 1 stage (group stage to Grand Final), from tournament-data.js */
+    ...(typeof TOURNAMENT_STAGES !== "undefined"
+        ? TOURNAMENT_STAGES.map(stage => ({
+            title: `Tournament: ${stage.title}`,
+            path: `tournament/stage.html?stage=${stage.key}`,
+            keywords: `tournament stage ${stage.format || ""} ${stage.key.replace(/-/g, " ")}`
+        }))
+        : []),
 
 
     { title: "Help: Feedback Form", url: HELP_FEEDBACK_URL, keywords: "help feedback suggestion comment contact", external: true },

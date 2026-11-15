@@ -6,6 +6,7 @@
    Used by every page. Load it FIRST:
 
    <script src="(path to)/scripts/girls-data.js"></script>
+   <script src="(path to)/scripts/tournament-data.js"></script>
    <script src="(path to)/scripts/site.js"></script>
 
    Because this file works out where the site root is from
@@ -3522,7 +3523,51 @@ function toKey(value) {
 
 }
 
+/*
+    A girl's status comes from the tournament results in
+    tournament-data.js when she appears in them (group standings
+    or a 1v1 match). Otherwise the manual "status" text above is used.
+*/
+
+function getTournamentStatus(girl) {
+
+    return typeof getTournamentProgress === "function"
+        ? getTournamentProgress(girl)
+        : null;
+
+}
+
+/* Text for a status badge */
+
+function getGirlStatus(girl) {
+
+    const progress = getTournamentStatus(girl);
+
+    return progress ? progress.label : (girl.status || "");
+
+}
+
+/* True while a girl is in the Wildcard Stage */
+
+function isWildcardGirl(girl) {
+
+    const progress = getTournamentStatus(girl);
+
+    if (progress) {
+        return progress.wildcard === true;
+    }
+
+    return String(girl.status || "").toLowerCase().includes("wildcard");
+
+}
+
 function getStatusKey(girl) {
+
+    const progress = getTournamentStatus(girl);
+
+    if (progress) {
+        return progress.key;
+    }
 
     const status = String(girl.status || "").toLowerCase();
 

@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="styles/site.css">
     <link rel="stylesheet" href="styles/page.css">
 	
+    <link rel="stylesheet" href="styles/tournament.css">
+
     <script src="scripts/maintenance.js"></script>
 
 
@@ -127,9 +129,13 @@
         }
 
         .group-list.two-tiles {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            max-width: 700px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            max-width: 1000px;
             margin: 0 auto;
+        }
+
+        .home-format {
+            margin-top: 60px;
         }
 
         .explore-tile {
@@ -234,6 +240,24 @@
                     <span>Group pages and voting</span>
                 </a>
 
+                <a href="tournament/index.html" class="group-tile explore-tile">
+                    <span class="icon">🏆</span>
+                    <strong>Tournament</strong>
+                    <span>Season 1 format, wildcard and knockout rounds</span>
+                </a>
+
+            </div>
+
+            <!-- Season 1 format at a glance (numbers come from tournament-data.js) -->
+            <div class="home-format">
+
+                <div class="section-heading">
+                    <h2>Season 1 at a Glance</h2>
+                    <p>Group stage, wildcard, then a 512-contestant knockout to crown the MEGA Messy Champion.</p>
+                </div>
+
+                <div class="tm-stats" id="formatStats"></div>
+
             </div>
 
         </div>
@@ -246,6 +270,7 @@
 
     <!-- Load order: girls-data.js, site.js, then this page's script -->
     <script src="scripts/girls-data.js"></script>
+<script src="scripts/tournament-data.js"></script>
     <script src="scripts/site.js"></script>
 
     <script>
@@ -272,6 +297,37 @@
             document.getElementById("statGirls").textContent = allGirls.length;
             document.getElementById("statGroups").textContent = groups.size;
             document.getElementById("statShows").textContent = sources.size;
+
+        })();
+
+
+        /* =========================================================
+           SEASON 1 FORMAT (from tournament-data.js)
+        ========================================================= */
+
+        (function showFormat() {
+
+            const target = document.getElementById("formatStats");
+
+            if (!target || typeof TOURNAMENT === "undefined") {
+                return;
+            }
+
+            const boxes = [
+                [TOURNAMENT.contestants, "Contestants"],
+                [TOURNAMENT.groups, "Groups of 6"],
+                [TOURNAMENT.automaticQualifiers, "Auto Qualifiers"],
+                [TOURNAMENT.wildcardEntrants, "Wildcard Entrants"],
+                [TOURNAMENT.wildcardQualifiers, "Wildcard Qualifiers"],
+                [TOURNAMENT.mainBracket, "In the Round of 512"]
+            ];
+
+            target.innerHTML = boxes.map(box => `
+                <div class="tm-stat">
+                    <span class="tm-stat-number">${box[0].toLocaleString()}</span>
+                    <span class="tm-stat-label">${box[1]}</span>
+                </div>
+            `).join("");
 
         })();
     </script>

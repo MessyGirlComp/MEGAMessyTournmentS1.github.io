@@ -8,7 +8,7 @@
    it, fills it in from girls-data.js, and wires up the
    carousel and vote button.
 
-   Load order: girls-data.js, site.js, profile.js
+   Load order: girls-data.js, tournament-data.js, site.js, profile.js
 ========================================================= */
 
 const CAROUSEL_INTERVAL = 5000;
@@ -81,7 +81,7 @@ function renderProfile(girl) {
         reaction: girl.reaction,
         reactionLabel: `Reaction to Being ${getMessVerb(girl)}`,
         videoHeading: `Watch ${girl.name} Getting ${getMessVerb(girl)}`,
-        status: girl.status,
+        status: getGirlStatus(girl),
         group: girl.group ? `Group ${girl.group}` : "",
         qualifyingGroup: girl.group
             ? `Qualifying Group ${girl.group}`
