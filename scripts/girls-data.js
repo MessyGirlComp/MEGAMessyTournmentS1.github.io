@@ -3971,7 +3971,7 @@ const girls = {
 },
 "257": {
     id: "257",
-    name: "Sophie",
+    name: "Megan",
     age: "",
     bio: "",
     appearance: "",
@@ -3979,7 +3979,7 @@ const girls = {
     status: "Currently Competing",
     group: 42,
     from: "Keep Your Enemies Close",
-    episode: "S1E9",
+    episode: "S1E12",
     mediaSourceType: "Game Show",
     messType: "Slime",
     youtube: ""
@@ -4001,7 +4001,7 @@ const girls = {
 },
 "259": {
     id: "259",
-    name: "Megha",
+    name: "Megen",
     age: "",
     bio: "",
     appearance: "",
